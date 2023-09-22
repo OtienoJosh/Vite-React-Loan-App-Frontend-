@@ -1,0 +1,733 @@
+                                       lendingform.tsx
+import React from 'react';
+import Header from './main/header';
+import Footer from './main/footer';
+import { useState } from 'react';
+
+const LendingForm = () => {
+  const [lenderName, setLenderName] = useState('');
+  const [loanAmount, setLoanAmount] = useState('');
+  const [interestRate, setInterestRate] = useState('');
+  const [loanDuration, setLoanDuration] = useState('');
+
+  const handleLendingSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Perform form validation and submission logic here
+    // You can make API calls or perform any necessary operations
+    console.log('Lending Form Submitted:', lenderName, loanAmount, interestRate, loanDuration);
+
+    // Reset the form fields after submission
+    setLenderName('');
+    setLoanAmount('');
+    setInterestRate('');
+    setLoanDuration('');
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container">
+        <h1 className="mt-5">Lending Application</h1>
+        <form onSubmit={handleLendingSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Lender Name:</label>
+            <input
+              type="text"
+              className="form-control"
+              value={lenderName}
+              onChange={(e) => setLenderName(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Loan Amount:</label>
+            <input
+              type="number"
+              className="form-control"
+              value={loanAmount}
+              onChange={(e) => setLoanAmount(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Interest Rate:</label>
+            <input
+              type="number"
+              step="0.01"
+              className="form-control"
+              value={interestRate}
+              onChange={(e) => setInterestRate(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Loan Duration (in months):</label>
+            <input
+              type="number"
+              className="form-control"
+              value={loanDuration}
+              onChange={(e) => setLoanDuration(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">Submit</button>
+        </form>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default LendingForm;
+
+
+
+Loancalculator.tsx
+import React, { useState } from 'react';
+import Header from './main/header';
+import Footer from './main/footer';
+
+const LoanCalculator = () => {
+  const [loanAmount, setLoanAmount] = useState('');
+  const [interestRate, setInterestRate] = useState('');
+  const [loanTerm, setLoanTerm] = useState('');
+  const [monthlyPayment, setMonthlyPayment] = useState('');
+
+  const handleLoanCalculate = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Perform loan calculation logic here
+    // You can calculate the monthly payment based on the loan amount, interest rate, and loan term
+    const calculatedMonthlyPayment = calculateMonthlyPayment(parseFloat(loanAmount), parseFloat(interestRate), parseFloat(loanTerm));
+
+    // Update the monthly payment state
+    setMonthlyPayment(calculatedMonthlyPayment);
+  };
+
+  const calculateMonthlyPayment = (amount: number, rate: number, term: number) => {
+    // Perform the loan calculation using the provided parameters
+    // Replace this with your actual loan calculation logic
+    const principal = amount;
+    const interest = rate / 100 / 12;
+    const payments = term * 12;
+
+    const x = Math.pow(1 + interest, payments);
+    const monthly = (principal * x * interest) / (x - 1);
+
+    return monthly.toFixed(2);
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container">
+        <h1 className="mt-5">Loan Calculator</h1>
+        <form onSubmit={handleLoanCalculate}>
+          <div className="mb-3">
+            <label className="form-label">Loan Amount:</label>
+            <input
+              type="number"
+              className="form-control"
+              value={loanAmount}
+              onChange={(e) => setLoanAmount(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Interest Rate (%):</label>
+            <input
+              type="number"
+              className="form-control"
+              value={interestRate}
+              onChange={(e) => setInterestRate(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Loan Term (years):</label>
+            <input
+              type="number"
+              className="form-control"
+              value={loanTerm}
+              onChange={(e) => setLoanTerm(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">Calculate</button>
+        </form>
+
+        {monthlyPayment && (
+          <div className="mt-3">
+            <h2>Monthly Payment:</h2>
+            <p>{monthlyPayment}</p>
+          </div>
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default LoanCalculator;
+
+
+loanresults.tsx
+import Header from './main/header';
+import Footer from './main/footer';
+
+const LoanResults = () => {
+  // Assuming you have some loan results data
+  const loanResultsData = [
+    { id: 1, amount: 1000, interestRate: 5, duration: 12 },
+    { id: 2, amount: 2000, interestRate: 6, duration: 24 },
+    { id: 3, amount: 3000, interestRate: 7, duration: 36 },
+  ];
+
+  return (
+    <div>
+      <Header />
+      <div className="container">
+        <h1 className="mt-5">Loan Results</h1>
+        <table className="table mt-3">
+          <thead>
+            <tr>
+              <th>Loan ID</th>
+              <th>Loan Amount</th>
+              <th>Interest Rate</th>
+              <th>Duration (months)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loanResultsData.map((loan) => (
+              <tr key={loan.id}>
+                <td>{loan.id}</td>
+                <td>${loan.amount}</td>
+                <td>{loan.interestRate}%</td>
+                <td>{loan.duration}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default LoanResults;
+
+login.tsx
+import { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import Header from './main/header';
+import Footer from './main/footer';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    // Handle login logic here
+    // You can make API calls or perform any necessary operations
+    console.log('Login:', email, password);
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container-fluid d-flex justify-content-center align-items-center vh-100">
+        <div className="card" style={{ width: "400px" }}>
+          <h1 className="card-header text-center">Login</h1>
+          <div className="card-body">
+            <form onSubmit={handleLogin}>
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">Email</label>
+                <input
+                  type="email"
+                  className="form-control form-control-sm"
+                  id="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">Password</label>
+                <input
+                  type="password"
+                  className="form-control form-control-sm"
+                  id="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="text-center">
+                <button type="submit" className="btn btn-primary">Login</button>
+              </div>
+              <div className="text-center mt-3">
+                Don't have an account? <Link to="/signup">Sign Up</Link> {/* Link to the signup page */}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default Login;
+
+profile.tsx
+import React, { useState } from 'react';
+import Header from './main/header';
+import Footer from './main/footer';
+
+const Profile = () => {
+  const [profilePicture, setProfilePicture] = useState<string | null>(null); // State to store the uploaded profile picture
+
+  // Sample user data
+  const user = {
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    phoneNumber: '123-456-7890',
+    address: '123 Main St, City, Country',
+    occupation: 'Software Engineer',
+    income: '$5,000',
+  };
+
+  // Function to handle the profile picture upload
+  const handleProfilePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; // Get the first file from the selected files
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setProfilePicture(reader.result as string); // Set the uploaded picture as the profile picture
+    };
+
+    if (file) {
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container py-5">
+        <div className="card p-4 shadow">
+          <h2 className="card-title text-center">Profile</h2>
+          <div className="text-center mb-4">
+            <div className="profile-picture-wrapper">
+              {profilePicture ? (
+                <img src={profilePicture} alt="Profile" className="profile-picture" />
+              ) : (
+                <div className="profile-picture-placeholder">No profile picture</div>
+              )}
+              <label className="profile-picture-upload">
+                <input type="file" accept="image/*" onChange={handleProfilePictureUpload} />
+                <i className="fas fa-camera"></i> Upload Picture
+              </label>
+            </div>
+          </div>
+          <div className="mb-3">
+            <strong>Name:</strong> {user.name}
+          </div>
+          <div className="mb-3">
+            <strong>Email:</strong> {user.email}
+          </div>
+          <div className="mb-3">
+            <strong>Phone Number:</strong> {user.phoneNumber}
+          </div>
+          <div className="mb-3">
+            <strong>Address:</strong> {user.address}
+          </div>
+          <div className="mb-3">
+            <strong>Occupation:</strong> {user.occupation}
+          </div>
+          <div className="mb-3">
+            <strong>Income:</strong> {user.income}
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default Profile;
+
+
+repaymentform.tsx
+import React, { useState } from 'react';
+import Header from './main/header';
+import Footer from './main/footer';
+
+const RepaymentForm = () => {
+  const [accountNumber, setAccountNumber] = useState('');
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+  const handleRepaymentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Perform form validation and submission logic here
+    // You can make API calls or perform any necessary operations
+
+    if (paymentMethod === 'bank') {
+      // Handle bank repayment logic
+      console.log('Bank Repayment:', accountNumber, paymentAmount);
+    } else if (paymentMethod === 'mpesa') {
+      // Handle M-Pesa repayment logic
+      console.log('M-Pesa Repayment:', accountNumber, paymentAmount);
+    }
+
+    // Reset the form fields after submission
+    setAccountNumber('');
+    setPaymentAmount('');
+    setPaymentMethod('');
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container">
+        <h1 className="mt-5">Loan Repayment</h1>
+        <form onSubmit={handleRepaymentSubmit}>
+          <div className="mb-3">
+            <label htmlFor="accountNumber" className="form-label">
+              Account Number:
+            </label>
+            <input
+              type="text"
+              id="accountNumber"
+              className="form-control"
+              value={accountNumber}
+              onChange={(e) => setAccountNumber(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="paymentAmount" className="form-label">
+              Payment Amount:
+            </label>
+            <input
+              type="number"
+              id="paymentAmount"
+              className="form-control"
+              value={paymentAmount}
+              onChange={(e) => setPaymentAmount(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="paymentMethod" className="form-label">
+              Payment Method:
+            </label>
+            <select
+              id="paymentMethod"
+              className="form-select"
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            >
+              <option value="">Select Payment Method</option>
+              <option value="bank">Bank</option>
+              <option value="mpesa">M-Pesa</option>
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </form>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default RepaymentForm;
+
+savingsform.tsx
+import React, { useState } from 'react';
+import Header from './main/header';
+import Footer from './main/footer';
+
+const SavingsForm = () => {
+  const [accountNumber, setAccountNumber] = useState('');
+  const [depositAmount, setDepositAmount] = useState('');
+
+  const handleSavingsSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Perform form validation and submission logic here
+    // You can make API calls or perform any necessary operations
+    console.log('Savings Form Submitted:', accountNumber, depositAmount);
+
+    // Reset the form fields after submission
+    setAccountNumber('');
+    setDepositAmount('');
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container">
+        <h1 className="mt-5">Savings Account Deposit</h1>
+        <form onSubmit={handleSavingsSubmit}>
+          <div className="mb-3">
+            <label htmlFor="accountNumber" className="form-label">
+              Account Number:
+            </label>
+            <input
+              type="text"
+              id="accountNumber"
+              className="form-control"
+              value={accountNumber}
+              onChange={(e) => setAccountNumber(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="depositAmount" className="form-label">
+              Deposit Amount:
+            </label>
+            <input
+              type="number"
+              id="depositAmount"
+              className="form-control"
+              value={depositAmount}
+              onChange={(e) => setDepositAmount(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </form>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default SavingsForm;
+
+signup.tsx
+import { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import Header from './main/header';
+import Footer from './main/footer';
+
+const Signup = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignup = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    // Handle signup logic here
+    // You can make API calls or perform any necessary operations
+    console.log('Signup:', name, email, password);
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container-fluid d-flex justify-content-center align-items-center vh-100">
+        <div className="card" style={{ width: '400px' }}>
+          <h1 className="card-header text-center">Signup</h1>
+          <div className="card-body">
+            <form onSubmit={handleSignup}>
+              <div className="mb-3">
+                <label htmlFor="name" className="form-label">
+                  Name:
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  className="form-control"
+                  placeholder="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  className="form-control"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  Password:
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  className="form-control"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="text-center">
+                <button type="submit" className="btn btn-primary">
+                  Sign Up
+                </button>
+              </div>
+              <div className="text-center mt-3">
+                Already have an account? <Link to="/login">Login</Link> {/* Link to the login page */}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default Signup;
+
+
+withdrawalform.tsx
+import React, { useState } from "react";
+import Header from "./main/header";
+import Footer from "./main/footer";
+
+const WithdrawalForm = () => {
+  const [accountNumber, setAccountNumber] = useState("");
+  const [withdrawalAmount, setWithdrawalAmount] = useState("");
+  const [withdrawalResult, setWithdrawalResult] = useState("");
+  const [selectedOption, setSelectedOption] = useState("mpesa");
+
+  const handleWithdrawalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Perform form validation
+    if (!accountNumber || !withdrawalAmount) {
+      console.log("Please enter both account number and withdrawal amount.");
+      return;
+    }
+
+    // Simulate M-Pesa and bank account withdrawal
+    try {
+      let withdrawalResult;
+      if (selectedOption === "mpesa") {
+        withdrawalResult = await simulateMpesaWithdrawal(withdrawalAmount);
+      } else if (selectedOption === "bank") {
+        withdrawalResult = await simulateBankAccountWithdrawal(
+          withdrawalAmount,
+          accountNumber
+        );
+      }
+
+      console.log("Withdrawal Form Submitted:");
+      console.log("Account Number:", accountNumber);
+      console.log("Withdrawal Amount:", withdrawalAmount);
+      console.log("Withdrawal Method:", selectedOption);
+      console.log("Withdrawal Result:", withdrawalResult);
+
+      // Set the withdrawal result
+      setWithdrawalResult(withdrawalResult || "");
+
+
+      // Reset the form fields after submission
+      setAccountNumber("");
+      setWithdrawalAmount("");
+    } catch (error) {
+      console.log("Withdrawal Error:", (error as Error).message);
+      setWithdrawalResult(
+        "An error occurred during withdrawal. Please try again."
+      );
+    }
+  };
+
+  // Simulate M-Pesa withdrawal
+  const simulateMpesaWithdrawal = async (amount: string): Promise<string> => {
+    // Replace this with your actual M-Pesa withdrawal logic
+    // Perform the necessary operations for M-Pesa withdrawal, such as making an API call
+    // Return the result of the withdrawal process
+    return new Promise<string>((resolve) => {
+      setTimeout(() => {
+        resolve(`Withdrew ${amount} KES from M-Pesa`);
+      }, 2000); // Simulating asynchronous operation
+    });
+  };
+
+  // Simulate bank account withdrawal
+  const simulateBankAccountWithdrawal = async (
+    amount: string,
+    accountNumber: string
+  ): Promise<string> => {
+    // Replace this with your actual bank account withdrawal logic
+    // Perform the necessary operations for bank account withdrawal, such as making an API call
+    // Return the result of the withdrawal process
+    return new Promise<string>((resolve) => {
+      setTimeout(() => {
+        resolve(`Withdrew ${amount} KES from bank account ${accountNumber}`);
+      }, 1500); // Simulating asynchronous operation
+    });
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="container">
+        <h1 className="mt-5">Withdrawal Request</h1>
+        <form onSubmit={handleWithdrawalSubmit}>
+          <div className="mb-3">
+            <label htmlFor="accountNumber" className="form-label">
+              Account Number:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="accountNumber"
+              value={accountNumber || ""}
+              onChange={(e) => setAccountNumber(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="withdrawalAmount" className="form-label">
+              Withdrawal Amount:
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              id="withdrawalAmount"
+              value={withdrawalAmount || ""}
+              onChange={(e) => setWithdrawalAmount(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="withdrawalMethod" className="form-label">
+              Withdrawal Method:
+            </label>
+            <select
+              className="form-control"
+              id="withdrawalMethod"
+              value={selectedOption}
+              onChange={(e) => setSelectedOption(e.target.value)}
+            >
+              <option value="mpesa">M-Pesa</option>
+              <option value="bank">Bank Account</option>
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </form>
+        {withdrawalResult && (
+          <div className="mt-3">
+            <h4>Withdrawal Result:</h4>
+            <p>{withdrawalResult}</p>
+          </div>
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default WithdrawalForm;
+
